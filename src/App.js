@@ -56,7 +56,7 @@ class App extends React.Component {
   constructor (props) {
     super(props);
     this.state = 
-    { location: "London", 
+    { location: "Lisbon", 
       isLoading: false,
       displayLocation: "",
       weather: {}
@@ -91,7 +91,7 @@ class App extends React.Component {
     const weatherData = await weatherRes.json();
     this.setState({weather : weatherData.daily});
   } catch (err) {
-    console.err(err);
+    console.error(err);
   } finally {
     this.setState({isLoading: false})
   }
@@ -118,4 +118,4 @@ class App extends React.Component {
 
 export default App
 
-String.fromCodePoint(127468, 127463)
+// dateProp={date} maxTempProp={max}
