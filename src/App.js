@@ -50,7 +50,7 @@ function formatDay(dateStr) {
     weekday: "short",
   }).format(new Date(dateStr));
 }
-// Location is the city name that the user will input. 
+
 
 class App extends React.Component {
   constructor (props) {
