@@ -113,8 +113,8 @@ class App extends React.Component {
 
       {this.state.weather.weathercode &&( 
         <Weather 
-         weatherProp= {this.state.weather}
-         locationProp={this.state.displayLocation}
+         weather= {this.state.weather}
+         location={this.state.displayLocation}
         />)}
       </div>
     )
@@ -126,17 +126,17 @@ export default App
 
 class Weather extends React.Component {
   render() {
-    // Destructure the weatherProp object
+   // Destructure the weatherProp object
     const {
       temperature_2m_max: maxTemp,
        temperature_2m_min: minTemp, 
        time: dates,
        weathercode: codes,
-      } = this.props.weatherProp;
+      } = this.props.weather;
 
       return (
         <div>
-          <h2>Weather {this.props.locationProp}</h2>
+          <h2>Weather {this.props.location}</h2>
           <ul className="weather">
             {dates.map((date, i) => (
               <Day
