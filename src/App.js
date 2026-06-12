@@ -29,7 +29,7 @@ function convertToFlag(countryCode) {
     .toUpperCase()
     .split("")
 // Converts each character into the special Unicode number used for regional indicator symbols. These combine into flag emojis.
-    .map((char) => 127397 + char.charCodeAt(0));
+    .map((char) => 127397 + char.charCodeAt());
   //  returns the flag emoji from those Unicode code points (country code).
   return String.fromCodePoint(...codePoints);
 }
@@ -111,11 +111,63 @@ class App extends React.Component {
       <button onClick={this.fetchWeather}>Get Weather</button>
       {this.state.isLoading && <p className="loader">Loading...</p>}
 
+      {this.state.weather.weathercode &&( 
+        <Weather 
+         weatherProp= {this.state.weather}
+         locationProp={this.state.displayLocation}
+        />)}
       </div>
     )
   }
 }
 
+
 export default App
 
-// dateProp={date} maxTempProp={max}
+class Weather extends React.Component {
+  render() {
+    const {
+      temperature_2m_max: maxTemp,
+       temperature_2m_min: minTemp, 
+       time: dates,
+       weathercode: codes,
+      } = this.props.weatherProp;
+
+      return (
+        <div>
+          <h2>Weather {this.props.locationProp}</h2>
+          <ul className="weather">
+            {dates.map((date, i) => (
+              <Day
+              dateProp={date}
+              maxTempProp={maxTemp.at(i)}
+              minTempProp={minTemp.at(i)}
+              codeProp={codes.at(i)}
+              key={date}
+              isToday={i === 0}
+              />
+            ))}
+          </ul>
+        </div>
+      )
+  }
+}
+
+class Day extends React.Component {
+  render() {
+    const { dateProp, maxTempProp, minTempProp, codeProp, isToday } = this.props;
+    return (
+      <li className="day">
+        <span>{getWeatherIcon(codeProp)}</span>
+        <p>{isToday ? "Today" : formatDay(dateProp)}</p>
+        <p> 
+          {Math.floor(minTempProp)}&deg; &mdash;
+           <strong>{Math.ceil(maxTempProp)}&deg; </strong>
+        </p>
+       </li>
+
+    )
+  }
+}
+
+// Destructure Weather and Day prop
