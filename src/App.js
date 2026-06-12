@@ -126,6 +126,7 @@ export default App
 
 class Weather extends React.Component {
   render() {
+    // Destructure the weatherProp object
     const {
       temperature_2m_max: maxTemp,
        temperature_2m_min: minTemp, 
@@ -155,6 +156,7 @@ class Weather extends React.Component {
 
 class Day extends React.Component {
   render() {
+    // Destructure Day object
     const { dateProp, maxTempProp, minTempProp, codeProp, isToday } = this.props;
     return (
       <li className="day">
@@ -169,5 +171,3 @@ class Day extends React.Component {
     )
   }
 }
-
-// Destructure Weather and Day prop
