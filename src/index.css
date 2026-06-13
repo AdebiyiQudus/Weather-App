@@ -91,3 +91,21 @@ input:focus {
   font-weight: 700;
 }
 
+/* .btn-weather {
+  background-color: #4a5568;
+  color: #ffffff;
+  font-family: inherit; 
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 12px 28px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+} */
+/* Smooth transition for animations */

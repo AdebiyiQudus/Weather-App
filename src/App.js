@@ -59,6 +59,7 @@ class App extends React.Component {
     { location: "Lisbon", 
       isLoading: false,
       displayLocation: "",
+      countryCode: "",
       weather: {}
     };
     this.fetchWeather = this.fetchWeather.bind(this);
@@ -77,11 +78,13 @@ class App extends React.Component {
     if (!geoData.results) throw new Error("Location not found");
 
     // Destructuring the first result from the geocoding API response to get the latitude, longitude, timezone, city name, and country code.
-    const { latitude, longitude, timezone, name, country_code } =
-      geoData.results.at(0);
-    this.setState({
-  displayLocation: `${name} ${convertToFlag(country_code)}`,
-});
+    const { latitude, longitude, timezone, name, country_code } 
+    = geoData.results.at(0);
+
+      this.setState({
+      displayLocation: name,
+      countryCode: country_code.toLowerCase() 
+    });
 
     // 2) Getting actual weather
     const weatherRes = await fetch(
@@ -90,12 +93,12 @@ class App extends React.Component {
     );
     const weatherData = await weatherRes.json();
     this.setState({weather : weatherData.daily});
-  } catch (err) {
-    console.error(err);
-  } finally {
-    this.setState({isLoading: false})
-  }
-  }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        this.setState({isLoading: false})
+      }
+      }
   render() {
     return (
       <div className="app">
@@ -108,13 +111,14 @@ class App extends React.Component {
         onChange={(e) => this.setState({location: e.target.value})}
       />
       </div>
-      <button onClick={this.fetchWeather}>Get Weather</button>
+      <button className="btn-weather" onClick={this.fetchWeather}>Get Weather</button>
       {this.state.isLoading && <p className="loader">Loading...</p>}
 
       {this.state.weather.weathercode &&( 
         <Weather 
          weather= {this.state.weather}
          location={this.state.displayLocation}
+         countryCode={this.state.countryCode}
         />)}
       </div>
     )
@@ -136,7 +140,20 @@ class Weather extends React.Component {
 
       return (
         <div>
-          <h2>Weather {this.props.location}</h2>
+          <h2>Weather {this.props.location}
+         <img 
+        src={`https://flags.restcountries.com/v5/w320/${this.props.countryCode}.png`} 
+        alt="Country Flag" 
+        style={{ 
+          width: '32px', 
+          marginLeft: '12px', 
+          verticalAlign: 'middle', 
+          borderRadius: '4px',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)' 
+        }}
+     />
+
+          </h2>
           <ul className="weather">
             {dates.map((date, i) => (
               <Day
