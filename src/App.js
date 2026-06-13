@@ -34,15 +34,7 @@ function convertToFlag(countryCode) {
   return String.fromCodePoint(...codePoints);
 }
 
-// function convertToFlag(countryCode) {
-//   if (!countryCode) return "";
 
-//   const codePoints = [...countryCode.toUpperCase()].map(
-//     char => 127397 + char.charCodeAt(0)
-//   );
-
-//   return String.fromCodePoint(...codePoints);
-// }
 // Format date string default = "Year-Month-Day" into a short weekday name, such as "Mon", "Tue", or "Fri".
 function formatDay(dateStr) {
   return new Intl.DateTimeFormat("en", {
@@ -60,45 +52,80 @@ class App extends React.Component {
       isLoading: false,
       displayLocation: "",
       countryCode: "",
-      weather: {}
+      weather: {},
+      error: ""
     };
     this.fetchWeather = this.fetchWeather.bind(this);
   }
 
   async fetchWeather() {
     try {
-      this.setState({isLoading: true})
+ // Reset loading and clear any old error states
+      this.setState({isLoading: true, error: ""});
     // 1) Getting location (geocoding)
+    // const geoRes = await fetch(
+    //   `https://geocoding-api.open-meteo.com/v1/search?name=${this.state.location}`,
+    // );
+    // const geoData = await geoRes.json();
+    
     const geoRes = await fetch(
-      `https://geocoding-api.open-meteo.com/v1/search?name=${this.state.location}`,
+      `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(this.state.location)}`,
     );
     const geoData = await geoRes.json();
-    console.log(geoData);
 
-    if (!geoData.results) throw new Error("Location not found");
+    if (!geoData.results || geoData.results.length === 0) {
+      throw new Error(`Location "${this.state.location}" not found.`);
+    }
+    
+
+    // if (!geoData.results) throw new Error("Location not found");
 
     // Destructuring the first result from the geocoding API response to get the latitude, longitude, timezone, city name, and country code.
     const { latitude, longitude, timezone, name, country_code } 
     = geoData.results.at(0);
 
-      this.setState({
+    this.setState({
       displayLocation: name,
-      countryCode: country_code.toLowerCase() 
+      countryCode: country_code ? country_code.toLowerCase() : ""
     });
+
+    //   this.setState({
+    //   displayLocation: name,
+    //   countryCode: country_code.toLowerCase() 
+    // });
 
     // 2) Getting actual weather
     const weatherRes = await fetch(
-  // Builds the weather API URL using the latitude, longitude, and timezone from the geocoding response (result).
       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=${timezone}&daily=weathercode,temperature_2m_max,temperature_2m_min`,
     );
     const weatherData = await weatherRes.json();
-    this.setState({weather : weatherData.daily});
-      } catch (err) {
-        console.error(err);
-      } finally {
-        this.setState({isLoading: false})
-      }
-      }
+    
+    if (!weatherData.daily) {
+      throw new Error("Could not load weather data for this region.");
+    }
+    
+    this.setState({ weather: weatherData.daily });
+
+  } catch (err) {
+    console.error(err);
+    // Save the error to state and clear the old weather so old cards don't show up broken
+    this.setState({ error: err.message, weather: {} }); 
+  } finally {
+    this.setState({ isLoading: false });
+  }
+}
+  //   const weatherRes = await fetch(
+  // // Builds the weather API URL using the latitude, longitude, and timezone from the geocoding response (result).
+  //     `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=${timezone}&daily=weathercode,temperature_2m_max,temperature_2m_min`,
+  //   );
+  //   const weatherData = await weatherRes.json();
+  //   this.setState({weather : weatherData.daily});
+  //     } catch (err) {
+  //       console.error(err);
+  //     } finally {
+  //       this.setState({isLoading: false})
+  //     }
+  //     }
   render() {
     return (
       <div className="app">
@@ -114,6 +141,10 @@ class App extends React.Component {
       <button className="btn-weather" onClick={this.fetchWeather}>Get Weather</button>
       {this.state.isLoading && <p className="loader">Loading...</p>}
 
+      {/* 👈 UI Feedback for Typos / Empty Responses */}
+      {this.state.error && <p className="error-message"
+       style={{ color: '#e53e3e', marginTop: '15px', fontWeight: '600' }}>{this.state.error}</p>}
+       
       {this.state.weather.weathercode &&( 
         <Weather 
          weather= {this.state.weather}
