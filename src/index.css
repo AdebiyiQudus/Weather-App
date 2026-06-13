@@ -91,7 +91,7 @@ input:focus {
   font-weight: 700;
 }
 
-/* .btn-weather {
+.btn-weather {
   background-color: #4a5568;
   color: #ffffff;
   font-family: inherit; 
@@ -106,6 +106,6 @@ input:focus {
   outline: none;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   
+  /* Smooth transition for animations */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-} */
-/* Smooth transition for animations */
+}
