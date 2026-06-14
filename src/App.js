@@ -62,12 +62,7 @@ class App extends React.Component {
     try {
  // Reset loading and clear any old error states
       this.setState({isLoading: true, error: ""});
-    // 1) Getting location (geocoding)
-    // const geoRes = await fetch(
-    //   `https://geocoding-api.open-meteo.com/v1/search?name=${this.state.location}`,
-    // );
-    // const geoData = await geoRes.json();
-    
+    // 1) Getting location (geocoding)   
     const geoRes = await fetch(
       `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(this.state.location)}`,
     );
@@ -141,10 +136,11 @@ class App extends React.Component {
       <button className="btn-weather" onClick={this.fetchWeather}>Get Weather</button>
       {this.state.isLoading && <p className="loader">Loading...</p>}
 
-      {/* 👈 UI Feedback for Typos / Empty Responses */}
+      {/* UI Feedback for Typos / Empty Responses */}
       {this.state.error && <p className="error-message"
-       style={{ color: '#e53e3e', marginTop: '15px', fontWeight: '600' }}>{this.state.error}</p>}
-       
+       style={{ color: '#e53e3e', marginTop: '15px',
+        fontWeight: '600' }}>{this.state.error}</p>}
+
       {this.state.weather.weathercode &&( 
         <Weather 
          weather= {this.state.weather}
