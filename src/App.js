@@ -71,9 +71,6 @@ class App extends React.Component {
     if (!geoData.results || geoData.results.length === 0) {
       throw new Error(`Location "${this.state.location}" not found.`);
     }
-    
-
-    // if (!geoData.results) throw new Error("Location not found");
 
     // Destructuring the first result from the geocoding API response to get the latitude, longitude, timezone, city name, and country code.
     const { latitude, longitude, timezone, name, country_code } 
