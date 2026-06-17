@@ -99,18 +99,7 @@ class App extends React.Component {
     this.setState({ isLoading: false });
   }
 }
-  //   const weatherRes = await fetch(
-  // // Builds the weather API URL using the latitude, longitude, and timezone from the geocoding response (result).
-  //     `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&timezone=${timezone}&daily=weathercode,temperature_2m_max,temperature_2m_min`,
-  //   );
-  //   const weatherData = await weatherRes.json();
-  //   this.setState({weather : weatherData.daily});
-  //     } catch (err) {
-  //       console.error(err);
-  //     } finally {
-  //       this.setState({isLoading: false})
-  //     }
-  //     }
+  
   render() {
     return (
       <div className="app">
