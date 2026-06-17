@@ -54,10 +54,6 @@ class App extends React.Component {
     error: ""
   };
 
-  // constructor (props) {
-  //   super(props);
-  //   this.fetchWeather = this.fetchWeather.bind(this);
-  // }
 
   // async fetchWeather() {
    fetchWeather = async () => {
