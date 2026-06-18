@@ -1,5 +1,9 @@
 // wmoCode => is a weather code from the WMO/Open-Meteo weather-code system.
 // Icons array (map) => each key is an array of weather codes, and each value is an emoji icon.
+// Importance of Lifecycle Methods => They allow you to run code at specific points in a component's life, such as when it mounts, updates, or unmounts. This is crucial for tasks like fetching data, setting up subscriptions, or cleaning up resources.
+// LIFECYCLE METHODS IN THIS APP:
+// componentDidMount() : fetchWeather() is called when the component is first mounted to the DOM. This ensures that the initial weather data is fetched and displayed as soon as the app loads.
+// componentDidUpdate(prevProps, prevState) : This lifecycle method is called after the component updates. It checks if the location in the state has changed compared to the previous state. If it has, it calls fetchWeather() again to fetch new weather data for the updated location.
 import React from "react";
 
 function getWeatherIcon(wmoCode) {
@@ -46,7 +50,7 @@ function formatDay(dateStr) {
 
 class App extends React.Component {
   state = 
-  { location: "Lisbon", 
+  { location: "", 
     isLoading: false,
     displayLocation: "",
     countryCode: "",
@@ -57,6 +61,8 @@ class App extends React.Component {
 
   // async fetchWeather() {
    fetchWeather = async () => {
+    if(this.state.location.length < 2 ) return;
+    
     try {
  // Reset loading and clear any old error states
       this.setState({isLoading: true, error: ""});
@@ -100,6 +106,18 @@ class App extends React.Component {
   }
 }
   setLocation = (e) => this.setState({location: e.target.value});
+
+  // componentDidMount() : useEffect[] works only onmount
+  componentDidMount() {
+    // this.fetchWeather();
+  }
+
+  // componentDidUpdate() : useEffect[location] works both onmount and on re-render(update) 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.location !== this.state.location) {
+      this.fetchWeather();
+    }
+  }
   render() {
     return (
       <div className="app">
@@ -107,9 +125,9 @@ class App extends React.Component {
         <Input locationProp={this.state.location} 
          onChangeLocationProp={this.setLocation} />
       
-      <button className="btn-weather" 
+      {/* <button className="btn-weather" 
       onClick={this.fetchWeather}>Get Weather</button>
-      {this.state.isLoading && <p className="loader">Loading...</p>}
+      {this.state.isLoading && <p className="loader">Loading...</p>} */}
 
       {/* UI Feedback for Typos / Empty Responses */}
       {this.state.error && <p className="error-message"
