@@ -181,7 +181,13 @@ class Weather extends React.Component {
 class Day extends React.Component {
   render() {
     // Destructure Day object
-    const { dateProp, maxTempProp, minTempProp, codeProp, isToday } = this.props;
+    const { 
+      dateProp, 
+      maxTempProp, 
+      minTempProp, 
+      codeProp, 
+      isToday } = this.props;
+      
     return (
       <li className="day">
         <span>{getWeatherIcon(codeProp)}</span>
