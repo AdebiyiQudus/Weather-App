@@ -99,19 +99,14 @@ class App extends React.Component {
     this.setState({ isLoading: false });
   }
 }
-  
+  setLocation = (e) => this.setState({location: e.target.value});
   render() {
     return (
       <div className="app">
         <h1>Weather Forecast</h1>
-        <div>
-      <input
-        type="text"
-        placeholder="Search from location..."
-        value={this.state.location}
-        onChange={(e) => this.setState({location: e.target.value})}
-      />
-      </div>
+        <Input locationProp={this.state.location} 
+         onChangeLocationProp={this.setLocation} />
+      
       <button className="btn-weather" 
       onClick={this.fetchWeather}>Get Weather</button>
       {this.state.isLoading && <p className="loader">Loading...</p>}
@@ -134,6 +129,20 @@ class App extends React.Component {
 
 
 export default App
+
+class Input extends React.Component {
+  render() {
+    return (
+       <div>
+      <input
+        type="text"
+        placeholder="Search from location..."
+        value={this.props.locationProp}
+        onChange={this.props.onChangeLocationProp}
+      />
+      </div>
+    )}
+  }
 
 class Weather extends React.Component {
   render() {
@@ -187,7 +196,7 @@ class Day extends React.Component {
       minTempProp, 
       codeProp, 
       isToday } = this.props;
-      
+
     return (
       <li className="day">
         <span>{getWeatherIcon(codeProp)}</span>
