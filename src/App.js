@@ -4,6 +4,8 @@
 // LIFECYCLE METHODS IN THIS APP:
 // componentDidMount() : fetchWeather() is called when the component is first mounted to the DOM. This ensures that the initial weather data is fetched and displayed as soon as the app loads.
 // componentDidUpdate(prevProps, prevState) : This lifecycle method is called after the component updates. It checks if the location in the state has changed compared to the previous state. If it has, it calls fetchWeather() again to fetch new weather data for the updated location.
+// componentWillUnmount() : This lifecycle method is called just before the component is removed from the DOM. In this app, it could be used to clean up any effect (ongoing API requests or timers related to fetching weather data) when the component is unmounted
+
 import React from "react";
 
 function getWeatherIcon(wmoCode) {
@@ -61,8 +63,9 @@ class App extends React.Component {
 
   // async fetchWeather() {
    fetchWeather = async () => {
-    if(this.state.location.length < 2 ) return;
-    
+    if(this.state.location.length < 2 )
+       return this.setState({ weather: {}, error: "Please enter at least 2 characters for location." });
+
     try {
  // Reset loading and clear any old error states
       this.setState({isLoading: true, error: ""});
@@ -110,12 +113,17 @@ class App extends React.Component {
   // componentDidMount() : useEffect[] works only onmount
   componentDidMount() {
     // this.fetchWeather();
+
+   this.setState({ location: localStorage.getItem
+    ("Location") || "" });
   }
 
   // componentDidUpdate() : useEffect[location] works both onmount and on re-render(update) 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.location !== this.state.location) {
       this.fetchWeather();
+
+      localStorage.setItem("Location", this.state.location);
     }
   }
   render() {
@@ -163,6 +171,10 @@ class Input extends React.Component {
   }
 
 class Weather extends React.Component {
+ // componentWillUnmount() : Works after component is unmounted (removed from DOM)
+  componentWillUnmount() {
+    console.log("Weather component is being unmounted. Cleaning up...");
+  }
   render() {
    // Destructure the weatherProp object
     const {
@@ -209,7 +221,7 @@ class Day extends React.Component {
   render() {
     // Destructure Day object
     const { 
-      dateProp, 
+      dateProp,  
       maxTempProp, 
       minTempProp, 
       codeProp, 
