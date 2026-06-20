@@ -132,10 +132,6 @@ class App extends React.Component {
         <h1>Weather Forecast</h1>
         <Input locationProp={this.state.location} 
          onChangeLocationProp={this.setLocation} />
-      
-      {/* <button className="btn-weather" 
-      onClick={this.fetchWeather}>Get Weather</button>
-      {this.state.isLoading && <p className="loader">Loading...</p>} */}
 
       {/* UI Feedback for Typos / Empty Responses */}
       {this.state.error && <p className="error-message"
